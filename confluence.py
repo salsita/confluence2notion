@@ -45,13 +45,20 @@ class Confluence:
             for data_item in data["results"]:
                 yield data_item
 
-            if start + limit >= size:
+            # size is the number of results in the current set,
+            # the total number is not provided within the query
+            if limit > size:
                 break
 
             start = start + limit
 
     def get_spaces(self):
         return self.get_list(f"{self.base_url}/rest/api/space")
+
+    def get_spaces_by_key(self, keys=None):
+        for space in self.get_spaces(): 
+            if (keys==None or space['key'] in keys):
+                yield space
 
     def get_page(self, page_url):
         resp = requests.get(

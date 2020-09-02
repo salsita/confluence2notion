@@ -63,9 +63,21 @@ def parse_args():
         help="number of Confluence spaces to be exported in parallel",
         default=4,
     )
+    parser.add_argument(
+        "--space",
+        action="append",
+        nargs="*",
+        dest="space",
+        help="specific Confluence space(s) to be exported",
+    )
 
     return parser.parse_args()
 
+def get_filtered_spaces(confluence, keys=None):
+    for space in confluence.get_spaces(): 
+        if (keys==None or space['key'] in keys):
+            print(space['key'])
+            yield space
 
 def main():
     args = parse_args()
@@ -82,11 +94,17 @@ def main():
         ),
     )
 
+    keys = None
+    if (args.space != None):
+        keys = [item for sublist in args.space for item in sublist]
+    
+    spaces = confluence.get_spaces_by_key(keys)
+    
     exporter = Confluence2Notion(confluence, parent_page)
     with concurrent.futures.ThreadPoolExecutor(
         max_workers=args.concurrency
     ) as executor:
-        executor.map(exporter.write_space, confluence.get_spaces())
+        executor.map(exporter.write_space, spaces)
 
 
 if __name__ == "__main__":

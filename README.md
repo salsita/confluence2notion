@@ -17,12 +17,18 @@ export NOTION_TOKEN="<token_v2>"
 
 ## Usage
 The tool iterates over all available Confluence spaces and recursively converts them to Notion pages.
+Alternatively you can specify one or more spaces (by keys) to convert only a portion of Confluence data.
 
 ```
-python confluence2notion.py YOUR_BASE_CONFLUENCE_URL PARENT_NOTION_PAGE_URL [--concurrency 4]
+python confluence2notion.py YOUR_BASE_CONFLUENCE_URL PARENT_NOTION_PAGE_URL [--concurrency 4] [--space CONFLUENCE_SPACE_KEY]
 ```
 
 ### Example
 ```
 python confluence2notion.py "https://startmatter.atlassian.net/wiki" https://www.notion.so/startmatter/Test-667ca481144a48c793b767adb55a9d5a
+```
+
+### Example of spaces selection
+```
+python confluence2notion.py "https://startmatter.atlassian.net/wiki" https://www.notion.so/startmatter/Test-667ca481144a48c793b767adb55a9d5a --space KEY1 KEY2
 ```
